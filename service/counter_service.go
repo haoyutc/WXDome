@@ -72,8 +72,8 @@ func modifyCounter(r *http.Request) (int32, error) {
 	}
 
 	var count int32
-	if action == "inc" {
-		count, err = upsertCounter(r)
+	if action == "inc" || action == "down" {
+		count, err = upsertCounter(r, action)
 		if err != nil {
 			return 0, err
 		}
@@ -91,7 +91,7 @@ func modifyCounter(r *http.Request) (int32, error) {
 }
 
 // upsertCounter 更新或修改计数器
-func upsertCounter(r *http.Request) (int32, error) {
+func upsertCounter(r *http.Request, action string) (int32, error) {
 	currentCounter, err := getCurrentCounter()
 	var count int32
 	createdAt := time.Now()
@@ -101,7 +101,11 @@ func upsertCounter(r *http.Request) (int32, error) {
 		count = 1
 		createdAt = time.Now()
 	} else {
-		count = currentCounter.Count + 1
+		if action == "inc" {
+			count = currentCounter.Count + 1
+		} else {
+			count = currentCounter.Count - 1
+		}
 		createdAt = currentCounter.CreatedAt
 	}
 
