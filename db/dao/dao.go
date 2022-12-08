@@ -7,6 +7,12 @@ import (
 
 const tableName = "Counters"
 
+// DownCounter 减少Counter
+func (imp *CounterInterfaceImp) DownCounter(id, count int32) error {
+	cli := db.Get()
+	return cli.Table(tableName).Update("count", count).Error
+}
+
 // ClearCounter 清除Counter
 func (imp *CounterInterfaceImp) ClearCounter(id int32) error {
 	cli := db.Get()
