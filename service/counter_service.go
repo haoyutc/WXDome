@@ -83,12 +83,6 @@ func modifyCounter(r *http.Request) (int32, error) {
 			return 0, err
 		}
 		count = 0
-	} else if action == "down" {
-		count -= 1
-		err = downCounter(count)
-		if err != nil {
-			return 0, err
-		}
 	} else {
 		err = fmt.Errorf("参数 action : %s 错误", action)
 	}
@@ -130,10 +124,6 @@ func upsertCounter(r *http.Request, action string) (int32, error) {
 
 func clearCounter() error {
 	return dao.Imp.ClearCounter(1)
-}
-
-func downCounter(count int32) error {
-	return dao.Imp.DownCounter(1, count)
 }
 
 // getCurrentCounter 查询当前计数器
